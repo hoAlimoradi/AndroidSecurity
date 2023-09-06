@@ -832,8 +832,67 @@ ADB (Android Debug Bridge) is a versatile command-line tool that allows you to c
 
 For additional support, consult the [Android Developer documentation](https://developer.android.com/studio/command-line/adb).
 
+# APKTool Guide
+
+APKTool is a powerful tool that allows users to decode, rebuild, and modify APK (Android Package) files, which are the application files used on Android devices. One of the primary uses of APKTool is decompiling APK files into readable source code, which can be useful for various purposes, including research, application security testing, and reverse engineering.
+
+## Installation
+
+### Windows
+
+1. **Download Windows wrapper script (bat file):**
+   - Navigate to the [APKTool's official page](https://ibotpeaches.github.io/Apktool/install/) and download the Windows wrapper script (`apktool.bat`) and `apktool.jar`.
+   
+2. **Place both files:**  
+   - Place them in the same directory, preferably a directory that's included in your PATH to access from anywhere using the Command Prompt.
+
+### macOS
+
+1. **Download using Homebrew:**  
+   If you have Homebrew installed, you can install APKTool with:
+   ```bash
+   brew install apktool
+   ```
+
+### Linux
+
+1. **Download Linux wrapper script (bash file):**
+   - Navigate to the [APKTool's official page](https://ibotpeaches.github.io/Apktool/install/) and download the Linux wrapper script (`apktool`) and `apktool.jar`.
+
+2. **Place both files:**  
+   - Place them in the same directory, preferably `/usr/local/bin` for system-wide access.
+   - Make the script executable: `chmod +x /usr/local/bin/apktool`.
+
+## Using APKTool to Decompile APK
+
+1. **Decompile the APK:**  
+   Using your terminal or Command Prompt, navigate to the directory containing your APK file and use the following command:
+   ```bash
+   apktool d your_app.apk -o output_folder/
+   ```
+   - `your_app.apk` is the name of your APK file.
+   - `output_folder/` is the directory where decompiled files will be saved.
+
+2. **Review Decompiled Files:**  
+   Navigate to the `output_folder/` to view the decompiled resources and AndroidManifest.xml.
+
+## Compiling the APK (optional)
+
+If you've made changes and wish to rebuild the APK, follow these steps:
+
+1. **Compile the Modified Source:**  
+   Navigate to the directory containing the modified source and use:
+   ```bash
+   apktool b output_folder/ -o new_app.apk
+   ```
+   - `output_folder/` is the directory containing your modified source.
+   - `new_app.apk` will be the name of the recompiled APK.
+
+2. **Sign the APK:**  
+   Before installing a recompiled APK on a device, it needs to be signed. You can use tools like `jarsigner` or platforms like Android Studio to sign your APK.
+
 ---
 
-Remember, always be ethical in your penetration testing endeavors. Only test devices and applications you have permission to evaluate.
+**Note:** Decompiling and modifying applications, especially without permission, can be illegal or unethical. Ensure you have proper authorization and always act responsibly.
 
 
