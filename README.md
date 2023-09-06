@@ -1757,5 +1757,587 @@ Once vulnerabilities are identified, take the necessary steps to mitigate them:
 4. Perform regular security assessments using tools like MobSF and manual code reviews.
 
  
+# Bypass root detection
+Bypassing root detection is a common objective during Android penetration testing, especially when assessing applications that refuse to run on rooted devices due to security concerns. The following are methods to bypass root detection:
+
+### 1. **Static Analysis**:
+
+- **Decompile the APK** using tools like jadx or apktool.
+- **Inspect the source code** to identify where the root detection logic is implemented.
+- **Modify the logic** to always return false or bypass the check.
+- **Recompile the APK** and install it on the device.
+
+### 2. **Using Xposed Framework**:
+Xposed is a framework that allows users to modify the runtime of Android applications without altering the APK.
+
+- Install the Xposed Framework on the rooted device.
+- Use modules like **RootCloak** to hide the rooted status from specific apps.
+
+### 3. **Using Frida**:
+
+Frida is a dynamic instrumentation toolkit. You can use it to modify the behavior of a running Android application.
+
+- Write Frida scripts to hook into methods that check for root and modify the return values. For instance, if an app checks for the existence of the `su` binary, you can intercept that call and return a result indicating the binary doesn't exist.
+
+### 4. **Rename or Remove su Binary**:
+
+Some apps simply check for the existence of the `su` binary. You can rename or temporarily remove the binary, although this will effectively unroot the device temporarily.
+
+### 5. **Hide Root with Magisk**:
+
+Magisk is a popular rooting solution that has a feature called "Magisk Hide". This feature allows users to hide root from certain applications.
+
+- Install Magisk Manager and root the device using Magisk.
+- Open Magisk Manager and go to the "Magisk Hide" section.
+- Select the apps from which you want to hide root.
+
+### 6. **Bypassing Root Detection via Debugging**:
+
+- Use the Android Debug Bridge (ADB) to debug the application.
+- Set breakpoints at suspected root detection routines and manipulate the results.
+
+### 7. **Runtime Patching**:
+
+There are tools like "Lucky Patcher" that can be used to patch applications during runtime, thereby bypassing certain checks.
+
+### Precautions:
+
+1. Always make sure you have permission to test the app.
+2. Be aware that some applications employ multiple root detection techniques. You might have to apply more than one method to completely bypass root detection.
+3. Bypassing root detection could break the functionality of some applications, especially if they depend on root for certain features.
+
+By using a combination of the above methods, it's often possible to bypass the root detection mechanisms employed by Android applications.
+
+# Dumping with dd
+Dumping memory or storage contents from an Android device can be a valuable technique during penetration testing. Here's how you can utilize `dd` within Android to achieve this:
+
+### 1. **Prerequisites**:
+
+- **Rooted Android Device**: To access certain memory or storage areas, you'll need root permissions.
+- **ADB (Android Debug Bridge)**: It allows you to communicate with the device and execute shell commands.
+
+### 2. **Dumping RAM with `dd`**:
+
+1. First, access the Android shell:
+    ```bash
+    adb shell
+    ```
+
+2. Elevate to root (assuming the device is rooted):
+    ```bash
+    su
+    ```
+
+3. Use `dd` to dump the memory:
+    ```bash
+    dd if=/dev/mem of=/sdcard/mem_dump.bin bs=4096
+    ```
+
+**Note**: On many modern Android devices, `/dev/mem` might be restricted or unavailable due to security measures. 
+
+### 3. **Dumping Storage with `dd`**:
+
+You can similarly use `dd` to make an image of the device's storage. For example, to dump the user data partition:
+
+1. Access the Android shell and elevate to root as before.
+
+2. Use `dd` to dump the data partition:
+    ```bash
+    dd if=/dev/block/bootdevice/by-name/userdata of=/sdcard/data_dump.img bs=4096
+    ```
+
+### 4. **Transfer Dumps to Your PC**:
+
+After dumping memory or storage, you can transfer the dump files to your PC for analysis:
+
+```bash
+adb pull /sdcard/mem_dump.bin /path/on/your/pc/
+adb pull /sdcard/data_dump.img /path/on/your/pc/
+```
+
+### 5. **Considerations and Cautions**:
+
+- **Permissions**: Always ensure you have the necessary permissions to conduct penetration testing, especially if it's not on a device you own.
+  
+- **Storage & Memory Size**: Be aware of the size of the dump you're creating. Android devices might have several GBs of RAM or storage, and dumping large sections can be time-consuming and might fill up storage quickly.
+
+- **Sensitive Data**: Memory and storage dumps can contain extremely sensitive data. Handle them with care and ensure you delete or secure them appropriately after analysis.
+
+- **Device Stability**: Dumping large sections of memory or storage can sometimes affect device stability. Always be cautious and avoid potential data loss.
+
+By following these steps, you can utilize `dd` on an Android device to dump RAM and storage contents, assisting in your penetration testing and forensic activities.
+///
+
+# Dumping By Command
+Dumping RAM or memory contents is a powerful technique during penetration testing to detect sensitive data leakage, such as authentication tokens, encryption keys, passwords, etc. Here's how you can dump RAM on an Android device and then search for specific strings or objects:
+
+### 1. **Prerequisites**:
+- **Rooted Android device**: Access to the device's memory typically requires root permissions.
+- **ADB (Android Debug Bridge)**: This tool lets you communicate with the device.
+- **Linux environment**: The examples here will use Linux utilities to process the memory dump.
+
+### 2. **Dumping RAM**:
+
+1. **Using /proc/[pid]/mem**: Every process in Android (or Linux) has a `/proc/[pid]/mem` file that represents its memory. With root permissions, you can directly read this file.
+    ```bash
+    adb shell
+    su
+    cat /proc/[pid]/mem > /sdcard/memory_dump.bin
+    ```
+
+2. **Using GameGuardian**: GameGuardian is an Android app primarily designed for game cheating, but it can be used to search for and edit values in the RAM. Although it's mainly user-friendly, it's not as flexible as manual methods.
+
+3. **Using Frida**: Frida can be used to hook into specific methods or access memory regions directly. You can write a Frida script to dump the memory of a specific app when a particular method is called.
+
+### 3. **Searching for Specific Strings or Patterns**:
+
+Once you've dumped the memory contents, you can use standard Linux utilities to search for strings:
+
+- **Pull the dump file to your local machine**:
+    ```bash
+    adb pull /sdcard/memory_dump.bin
+    ```
+
+- **Search for strings**:
+    ```bash
+    strings memory_dump.bin | grep 'specific_string_or_pattern'
+    ```
+
+The `strings` command extracts readable strings from binary files, and `grep` searches for your specific string or pattern.
+
+### 4. **Considerations and Cautions**:
+
+- **Permissions**: Make sure you have the necessary permissions to conduct penetration testing, especially if it's not on a device or app you own.
+  
+- **Memory size**: Android devices might have several GBs of RAM. Dumping the entire memory isn't always practical. Instead, target specific processes or apps if you can.
+  
+- **Sensitive data**: Remember that the memory dump can contain sensitive data. Handle it with care, and ensure you delete or secure it appropriately after analysis.
+
+- **Tool limitations**: Some tools might not be able to dump the entire memory or might miss certain sections due to memory protection mechanisms or tool limitations. Always validate your findings.
+
+By following these steps, you can effectively dump RAM from an Android device and search for specific objects or strings of interest during your penetration testing activities.
 
 
+#  Dumping NAND
+`nanddump` is a utility mainly used for reading NAND flash memory devices on Linux systems. On certain Android devices, especially older ones, the NAND flash memory is used as the primary storage medium. In the context of Android penetration testing, `nanddump` can be used to acquire memory dumps.
+
+Here's how you can use `nanddump` to dump the memory or storage of an Android device:
+
+### 1. **Prerequisites**:
+
+- **Rooted Android Device**: Root access is necessary to read raw NAND partitions.
+- **ADB (Android Debug Bridge)**: Allows for command execution on the device.
+
+### 2. **Installing nanddump**:
+
+If `nanddump` isn't already on the device, you may need to cross-compile it for Android or obtain a pre-compiled binary suitable for your device's architecture.
+
+### 3. **Dumping NAND flash with `nanddump`**:
+
+1. Access the Android shell using ADB:
+    ```bash
+    adb shell
+    ```
+
+2. Elevate to root:
+    ```bash
+    su
+    ```
+
+3. Identify the NAND partition you want to dump. Common partitions include `system`, `userdata`, and `boot`. Their locations might vary, but they are generally found in `/dev/mtd/`.
+
+   To list the MTD devices:
+    ```bash
+    cat /proc/mtd
+    ```
+
+4. Use `nanddump` to dump the desired partition. For example, to dump the `mtd0` partition:
+    ```bash
+    nanddump -f /sdcard/mtd0_dump.bin /dev/mtd/mtd0
+    ```
+
+### 4. **Transfer Dumps to Your PC**:
+
+After creating the dump, transfer it to your computer for further analysis:
+
+```bash
+adb pull /sdcard/mtd0_dump.bin /path/on/your/pc/
+```
+
+### 5. **Considerations and Cautions**:
+
+- **Permissions**: Always ensure you have the required permissions to perform penetration testing.
+  
+- **Storage Size**: NAND dumps can be large. Ensure the Android device has enough free space to store the dump.
+
+- **Sensitive Data**: NAND dumps can contain sensitive information. Always handle and store them securely.
+
+- **Device Differences**: Not all Android devices use NAND flash, especially newer devices. In many modern devices, NAND has been replaced with eMMC or UFS storage types. The procedure for those might differ.
+
+By using `nanddump`, you can acquire raw images of NAND flash partitions from Android devices, aiding in your penetration testing and forensic investigations.
+
+# Autopsy
+Autopsy is a digital forensics platform and GUI interface to The Sleuth Kit and other analysis tools. While it's primarily used for computer-based digital forensics, it can also be employed for post-mortem analyses of Android devices once you've obtained a physical or logical image of the device storage.
+
+Here's a basic guide on how to use Autopsy for Android penetration testing:
+
+### 1. **Prerequisites**:
+
+- **Physical or Logical Image of Android Device**: Before using Autopsy, you should have a raw image (`dd` or equivalent format) of the Android device's storage. This image is what Autopsy will analyze.
+
+- **Autopsy Software**: Ensure you've downloaded and installed Autopsy. You can get it from [The Sleuth Kit's website](https://www.sleuthkit.org/autopsy/).
+
+### 2. **Using Autopsy**:
+
+**A. Create a New Case**:
+
+1. Launch Autopsy and select `New Case`.
+2. Provide a case name and directory for Autopsy to store case data.
+3. Enter case details like Investigator’s name.
+
+**B. Add a Data Source**:
+
+1. After creating the case, you'll be prompted to add a data source.
+2. Select `Disk Image or VM File` and then click `Next`.
+3. Browse and select the raw image of the Android device.
+4. Choose the appropriate type (usually it's `Raw (dd)`).
+
+**C. Ingest Modules**:
+
+1. Autopsy will ask which ingest modules you want to run on the data source. These modules perform various analysis tasks.
+2. Typically, you'd want to run most modules for a comprehensive analysis. For Android, `Hash Lookup`, `File Type Identification`, `Recent Activity`, `Keyword Search`, and `EXIF Parsing` are especially useful.
+3. Click `Next` to begin the analysis.
+
+**D. Reviewing Results**:
+
+1. Once the analysis is complete, you can review the results in Autopsy's interface.
+2. Navigate through the directory structure, view file metadata, search for specific files, and more.
+3. The `Results` section will categorize findings, e.g., web bookmarks, call logs, and messages if it finds any.
+
+### 3. **Considerations for Android**:
+
+- **SQLite Databases**: Android uses SQLite databases to store a lot of information, including SMS messages, call logs, and app data. Consider using specialized SQLite viewers to explore these databases in-depth.
+  
+- **Timestamps**: Android (like other Unix-based systems) uses Unix timestamps. Ensure you're interpreting these correctly.
+
+- **Apps Analysis**: Installed applications can be a gold mine of information. Analyze APK files, app data directories, and relevant databases.
+
+- **Data Protection**: If the Android device storage was encrypted, you'll need the decryption key or method to access data.
+
+By integrating Autopsy in your Android penetration testing workflow, you can perform deep dives into the data stored on devices, assisting in vulnerability assessments and evidence collection.
+
+# Linux Memory Extractor
+**LiME (Linux Memory Extractor)** is primarily a tool for capturing volatile memory (RAM) of a Linux machine. It's particularly useful for forensics and investigative purposes. Given that Android is built on the Linux kernel, LiME can also be used to dump the RAM of an Android device. This can be crucial in penetration testing to uncover artifacts, running processes, or sensitive information left in the memory.
+
+Here's how to use LiME for Android penetration testing:
+
+### 1. **Prerequisites**:
+
+- **Rooted Android Device**: You need root permissions to load kernel modules.
+- **ADB (Android Debug Bridge)**: For communication and command execution on the device.
+
+### 2. **Using LiME on Android**:
+
+**A. Compiling LiME for Android**:
+1. Clone the LiME repository: 
+   ```bash
+   git clone https://github.com/504ensicsLabs/LiME.git
+   ```
+2. Compile the LiME module for your Android device. This involves setting the appropriate cross-compiler and ARCH flags. You'll typically use the Android NDK for this.
+
+**B. Transferring and Loading the Module**:
+1. Push the compiled LiME module to the Android device:
+   ```bash
+   adb push path/to/lime.ko /data/local/tmp/
+   ```
+2. Access the device shell using ADB:
+   ```bash
+   adb shell
+   ```
+3. Elevate to root:
+   ```bash
+   su
+   ```
+4. Load the LiME module to capture the memory. This can be output to a local file or over a network socket:
+   ```bash
+   insmod /data/local/tmp/lime.ko "path=/data/local/tmp/memdump.lime format=lime"
+   ```
+
+**C. Analyzing the Dump**:
+1. Pull the dump from the Android device to your machine:
+   ```bash
+   adb pull /data/local/tmp/memdump.lime .
+   ```
+2. Use forensic tools like Volatility or Rekall to analyze the memory dump.
+
+
+# Magisk
+Magisk is a popular tool in the Android development community due to its root capabilities and systemless modification features. For Android penetration testers, Magisk can be invaluable for granting root access without modifying the system partition, which might otherwise cause apps to detect tampering. Here's a guide on how to use Magisk in the context of Android penetration testing:
+
+### 1. **Installing Magisk**:
+
+**A. Prerequisites**:
+- An Android device with an unlocked bootloader.
+- A custom recovery like TWRP installed.
+
+**B. Installation**:
+1. Download the latest Magisk zip file from the [official Magisk GitHub page](https://github.com/topjohnwu/Magisk/releases).
+2. Transfer the zip file to your Android device.
+3. Boot into the custom recovery (like TWRP).
+4. Install the Magisk zip.
+5. Reboot the device.
+
+### 2. **Using Magisk**:
+
+**A. Magisk Manager**:
+After installing Magisk, install the Magisk Manager APK, which provides a user interface to manage Magisk modules, superuser privileges, and more.
+
+**B. Gaining Root**:
+Apps and scripts can request root access, which you can grant using Magisk Manager. This will be essential for many penetration testing tools.
+
+**C. MagiskHide**:
+Some apps detect root and refuse to run on rooted devices. Use MagiskHide (available in Magisk Manager) to hide root status from specific apps, making them think the device isn't rooted.
+
+**D. Modules**:
+Magisk has a variety of modules that can be installed to enhance functionality or assist in testing. For example, there are modules to enable certain features, improve device performance, or even spoof device identifiers.
+
+### 3. **Considerations for Penetration Testing**:
+
+**A. Root Detection Bypass**:
+Apps may employ root detection mechanisms. With MagiskHide, you can often bypass these checks, allowing you to test apps that would otherwise refuse to run.
+
+**B. Systemless Changes**:
+The advantage of Magisk's systemless approach is that it doesn't modify the `/system` partition. This makes it easier to revert changes and maintain the integrity of the testing environment.
+
+**C. SafetyNet**:
+Google's SafetyNet can detect modifications and root. Although Magisk has features to bypass SafetyNet checks, remember that these methods are in a constant cat-and-mouse game with Google. There's no guarantee of a permanent bypass.
+
+**D. Custom Scripts & Commands**:
+With root access, you can run custom scripts or commands that might be necessary for certain testing scenarios. For instance, manipulating app data, intercepting traffic, or modifying app runtime.
+
+**E. App Sandboxing**:
+With root access, sandbox restrictions can be bypassed, allowing for more in-depth testing, data extraction, and monitoring of apps.
+
+### 4. **Caution**:
+
+Always remember to take full backups before making changes. Testing can sometimes lead to data loss or device malfunctions. With a backup, you can restore the device to its previous state.
+
+In summary, while Magisk is primarily a rooting and system modification tool, its features can significantly assist during Android penetration testing, offering deeper access, flexibility, and systemless modifications
+
+# how you might dump a section of memory from an Android application using Frida
+Frida is a powerful dynamic instrumentation toolkit that allows you to interact with running processes, either by injecting custom scripts or by analyzing current operations. While it's not designed explicitly as a memory dumping tool, you can certainly use its capabilities to achieve similar results.
+
+Here's a basic example of how you might dump a section of memory from an Android application using Frida:
+
+### **1. Setting Up**:
+Ensure you have:
+- A rooted Android device or emulator.
+- Frida-server running on the Android device.
+- Frida tools installed on your PC.
+
+### **2. Dumping Memory**:
+
+**A. Identify the target process**:
+
+First, you need to identify the PID (Process ID) of the target application:
+```bash
+frida-ps -U
+```
+This will list all processes running on the device. Identify the target app by its package name.
+
+**B. Attach to the process**:
+```bash
+frida -U -p [PID]
+```
+Replace `[PID]` with the process ID of your target app.
+
+**C. Dumping memory**:
+
+Once you're attached to the process, you can use Frida's JavaScript API to read memory.
+
+For example, if you know the address and the size of the region you want to dump:
+```javascript
+var baseAddress = ptr('0x12345678'); // replace with the starting address
+var size = 1024; // replace with the size you want to dump
+var dumpedMemory = Memory.readByteArray(baseAddress, size);
+```
+
+You can then process `dumpedMemory` or save it to a file for analysis.
+
+### **3. Further Exploration with Frida**:
+
+Using Frida, you can automate tasks, like searching for specific patterns in memory or monitoring memory regions for changes. You can create custom scripts that utilize the `Process` and `Memory` APIs provided by Frida to scan, analyze, and manipulate the app's memory.
+
+### **4. Storing the Dumped Memory**:
+
+While the above gives you the memory in a `dumpedMemory` variable, you might want to send it to your computer for analysis. You can use Frida's `send()` function in combination with a listener on your computer to receive and store the data.
+
+### **Note**:
+It's essential to be aware of the legal and ethical implications when conducting any form of penetration testing. Always ensure you have permission to probe and analyze any application or system.
+
+While Frida provides the capability to inspect and manipulate memory, dedicated memory forensics tools (like LiME for Android) are more suitable for large-scale memory dumps. Frida is more apt for targeted, dynamic analysis tasks.
+//
+
+# Backing up sensitive data
+Backing up sensitive data from an Android device is a critical aspect during penetration testing, especially when attempting to exploit or manipulate data without causing unintended harm or data loss. Here's a guide on how to backup various types of data on an Android device:
+
+### 1. **Prerequisites**:
+- **Rooted Android Device**: Some data sources may require elevated permissions to access.
+- **ADB (Android Debug Bridge)**: Lets you communicate with the device and execute shell commands.
+
+### 2. **Backup Procedures**:
+
+**A. SIM Card Data**:
+While you can't directly backup the data stored on a SIM card using Android's software tools, you can backup contacts that are saved on the SIM card.
+
+1. Go to Contacts -> Menu -> Import/Export.
+2. Select "Export to Storage" and choose the SIM card as the source. This will save a `.vcf` file to your device's storage.
+
+**B. User Data**:
+ADB can be used to pull general user data from the device.
+
+```bash
+adb pull /data/data/com.example.app /path/on/your/pc/
+```
+
+**C. Contacts**:
+Contacts are generally stored in the `ContactsContract` database. Use ADB to backup:
+
+```bash
+adb backup -f contacts.ab -noapk com.android.providers.contacts
+```
+
+Then, to extract the `.ab` file to a `.tar` file:
+
+```bash
+(dd if=contacts.ab bs=1 skip=24 | openssl zlib -d > contacts.tar)
+```
+
+**D. Text Messages**:
+Text messages are stored in the `mmssms.db` database. You can use ADB:
+
+```bash
+adb backup -f sms.ab -noapk com.android.providers.telephony
+```
+
+**E. Call Logs**:
+For call logs, they are stored within the `calllog.db` database. Again, ADB can be used:
+
+```bash
+adb backup -f calllogs.ab -noapk com.android.providers.calllog
+```
+
+**F. Gallery Images and Videos**:
+You can directly pull these from the device using ADB:
+
+```bash
+adb pull /sdcard/DCIM/ /path/on/your/pc/
+```
+
+### 3. **Considerations**:
+
+- **Sensitive Data**: Remember that backups contain sensitive data. Handle and store them with care.
+  
+- **Ensure Permissions**: Ensure you have the required permissions to conduct penetration testing and handle user data.
+
+- **Device Encryption**: Many modern devices use file-based encryption. Some backups might be encrypted and need appropriate decryption methods to access the raw data.
+
+- **Alternative Tools**: Tools like `Titanium Backup` on the Android device can be used for comprehensive backups, but they require root.
+
+By following the steps above, you'll have backups of critical data on an Android device, providing a safety net during penetration testing.
+
+
+Recovering deleted data from an SD card during Android penetration testing involves techniques similar to standard digital forensics recovery processes. Here's a step-by-step guide on how to do it:
+
+### 1. **Preparation**:
+
+**A. Handle with Care**: If you believe data on an SD card has been deleted and aim to recover it, do not write any more data to the card. This minimizes the risk of overwriting the deleted data.
+
+**B. Obtain Legal Permission**: Before attempting recovery, ensure that you have the necessary legal permissions to access and recover the data. Unauthorized data access can lead to legal implications.
+
+### 2. **Physical Connection**:
+
+**A. Connect the SD Card**: Use an SD card reader to connect the card to your computer. Most modern computers have built-in slots. If not, USB SD card readers are widely available.
+
+### 3. **Choose a Recovery Tool**:
+
+There are several tools available for data recovery, both open-source and commercial. Some popular ones include:
+
+- **Photorec**: A free, open-source file data recovery software.
+- **Recuva**: A freeware utility for Windows.
+- **R-Studio**: A commercial software with more advanced features.
+- **Dr. Fone**: Specifically designed for Android data recovery.
+
+### 4. **Recovery Process**:
+
+**A. Using Photorec**:
+
+1. Install Photorec. On Linux, you can usually get it via package managers like `apt`:
+   ```bash
+   sudo apt install testdisk
+   ```
+
+2. Run Photorec:
+   ```bash
+   sudo photorec
+   ```
+
+3. Select the disk corresponding to your SD card.
+4. Choose the partition (if any) or the whole disk.
+5. Select the file types you want to recover. By default, Photorec tries to recover all types.
+6. Choose a location on your computer to save the recovered files.
+
+### 5. **Analysis**:
+
+Once you've recovered the data, you can analyze it depending on the goals of your penetration test. For example:
+
+- If you're doing a forensic analysis, you may look for traces of malicious activity or data exfiltration.
+- If you're testing data retention policies, check if sensitive data was left unencrypted or if deleted data could be easily recovered.
+
+### 6. **Post-Recovery**:
+
+It's good practice to securely wipe the SD card if you don't need the recovered data anymore, especially if it contains sensitive or personal information.
+
+### Note:
+
+Remember, the ability to recover data largely depends on whether the data has been overwritten since it was deleted. Even if you're using advanced recovery tools, there's no guarantee that all deleted data can be restored.
+
+
+# FTK Imager
+FTK Imager is a popular digital forensics tool used to acquire forensic images and recover data. It's not specifically an Android tool, but it can be used to recover data from an SD card from an Android device.
+
+Here's how to recover deleted data or backup data from an SD card using FTK Imager:
+
+### 1. **Preparation**:
+- Ensure you have the necessary permissions to perform the recovery or backup.
+- Don't write any new data on the SD card you want to recover data from.
+
+### 2. **Connection**:
+- Connect the SD card to your computer using an SD card reader.
+
+### 3. **Install and Run FTK Imager**:
+- If you haven't already, download and install FTK Imager from AccessData's website.
+- Run FTK Imager.
+
+### 4. **Create a Disk Image (For Backup)**:
+If you want to create a forensic backup of the SD card:
+
+1. Click on `File` > `Create Disk Image`.
+2. Select a source type. For SD cards, it will typically be "Physical Drive."
+3. Select the correct drive from the list that corresponds to your SD card.
+4. Choose the type of image you want to create. "Raw (dd)" is a common choice for broad compatibility.
+5. Specify where you want to save the image and provide other details like segment size.
+6. Click on `Finish` to start the imaging process.
+
+### 5. **Recover Deleted Data**:
+To recover deleted data directly:
+
+1. In the FTK Imager, click on `File` > `Add Evidence Item`.
+2. Choose the source type as "Physical Drive" and select the SD card from the list.
+3. Once the drive is loaded, navigate through the directory structure in FTK Imager.
+4. Deleted files will often appear with a red "X" beside them. You can right-click on any file or folder and select `Export Files` to save them to another location.
+
+### 6. **Analysis**:
+After you have recovered files or created an image of the SD card, you can use various digital forensics tools to analyze the data. For example, if you have created a raw image of the SD card, tools like Autopsy can be used to process and analyze the image further. 
+
+By following these steps, you should be able to use FTK Imager for backing up and recovering data from an SD card as part of your Android penetration testing tasks.
