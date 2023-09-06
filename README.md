@@ -950,6 +950,143 @@ While ProGuard is a great start, there are commercial solutions that offer more 
 While obfuscation is a helpful tool in your app protection strategy, it's not a silver bullet. Combining it with other security best practices, like encryption, code hardening, and threat detection, provides a more comprehensive protection approach. Always ensure your primary focus is on writing secure code, and consider obfuscation as just one layer in your app's defense mechanism.
 
 
+# Decompiling an app
+Decompiling an app that's been obfuscated with ProGuard can be a bit challenging since obfuscation is specifically designed to hinder the reverse engineering process. However, it's not impossible. Here's a step-by-step guide:
+
+## Prerequisites:
+
+1. **APK file**: The Android app package you wish to decompile.
+2. **JADX**: A tool to convert Android Dex files to Java source code.
+3. **Apktool**: A tool for reverse engineering 3rd party, closed, binary Android apps.
+4. **Java JDK**: To run the above tools.
+
+## Steps:
+
+### 1. Decode the APK:
+
+Use **Apktool** to decode the APK resources:
+
+```bash
+apktool d <app_name>.apk -o output_directory
+```
+
+This will decompile the APK into a readable format and also decode the XML files, including the AndroidManifest.xml. While the source code is still in DEX format, the resources will be in a readable format.
+
+### 2. Decompile the DEX files to Java:
+
+Now, use **JADX** to convert DEX files to Java source code:
+
+```bash
+jadx -d output_directory <app_name>.apk
+```
+
+### 3. Analyze the Code:
+
+After the previous steps, you'll have Java files to inspect, but here's where the obfuscation comes into play:
+
+- Classes and methods will have meaningless names like `a`, `b`, `c`...
+- Important strings might be encrypted.
+- Some code patterns might be altered to be less straightforward.
+
+Keep in mind that even though the code is obfuscated:
+
+1. **Contextual Analysis**: By studying the app's behavior, layout, and resources, you can get context, which may help understand the obfuscated code.
+   
+2. **Repetitive Analysis**: Often, patterns emerge in obfuscated code. Identifying these can help deduce the functionality of certain obfuscated blocks.
+   
+3. **Logging**: Adding log statements (by modifying the code and then recompiling) can help in understanding the flow and data.
+   
+4. **Mapping Files**: If you somehow get access to the mapping files created by ProGuard during obfuscation, it can be used to revert the obfuscated names back to their original names, making the code easier to read.
+
+### Tools to Assist:
+
+- **Procyon**: A Java decompiler that can be handy for heavily obfuscated apps.
+- **JD-GUI**: Another popular Java decompiler.
+- **Bytecode Viewer**: A Java 8 Jar & Android APK Reverse Engineering Suite (Decompiler, Editor, Debugger & More).
+
+## Important Notes:
+
+- **Legality**: Ensure you have the appropriate permissions to reverse engineer the app. Decompiling or reverse engineering apps without consent can be illegal and unethical.
+   
+- **Complete Understanding**: Obfuscation, especially when combined with other security measures, can make it extremely hard, if not impossible, to fully understand an app's functionality just by examining its decompiled code.
+   
+- **Tools Limitation**: While tools can automate much of the reverse engineering process, a good understanding of Java and Android app development is essential for making sense of obfuscated code.
+
+In conclusion, while obfuscation complicates the reverse engineering process, with the right tools and methodologies, it's possible to gain significant insight into the app's workings.
+
+
+# Procyon
+Procyon is a suite of Java metaprogramming tools, with one of its most popular components being the Procyon Java Decompiler. Here's how you can install and use Procyon's decompiler on Linux:
+
+### 1. Prerequisites:
+
+Ensure you have Java installed:
+
+```bash
+sudo apt update
+sudo apt install default-jre
+```
+
+To check your Java version:
+
+```bash
+java -version
+```
+
+### 2. Download Procyon:
+
+Navigate to the [Procyon releases page](https://bitbucket.org/mstrobel/procyon/downloads/) on Bitbucket. You'll find various `.jar` files available for download. The decompiler's jar file typically has a name format like `procyon-decompiler-x.y.z.jar` where x.y.z is the version number.
+
+You can either download the required `.jar` file via a web browser or use `wget` or `curl` from the terminal:
+
+```bash
+wget https://bitbucket.org/mstrobel/procyon/downloads/procyon-decompiler-x.y.z.jar
+```
+
+Replace `x.y.z` with the appropriate version number.
+
+### 3. Using Procyon:
+Decompiling an Android APK with Procyon involves several steps, mainly because Android APKs contain DEX (Dalvik Executable) files, rather than standard Java `.class` files. The general process can be divided into three main steps:
+
+1. **Convert DEX to JAR**: This can be achieved using a tool like `d2j-dex2jar`.
+2. **Decompile the JAR using Procyon**.
+3. **Inspect and analyze the decompiled code**.
+
+Let's go step-by-step:
+
+#### 1. Convert DEX to JAR:
+
+Firstly, you'll need to install `d2j-dex2jar`. On Linux:
+
+```bash
+sudo apt install dex2jar
+```
+
+Given an APK named `example.apk`, convert its DEX files to a JAR:
+
+```bash
+d2j-dex2jar example.apk
+```
+
+This will produce a file named `example-dex2jar.jar`.
+
+#### 2. Decompile the JAR using Procyon:
+
+Now, let's use Procyon to decompile the JAR file. If you've already downloaded Procyon's decompiler JAR (say, named `procyon-decompiler-x.y.z.jar`), run:
+
+```bash
+java -jar procyon-decompiler-x.y.z.jar example-dex2jar.jar -o output_directory
+```
+
+Replace `x.y.z` with the actual version number of the Procyon jar you have, and `output_directory` with the directory where you want the decompiled Java files to be saved.
+
+In summary, Procyon is a powerful tool in the Android reverse engineering toolkit, especially when combined with other tools like `dex2jar`. Together, they offer a comprehensive view of an Android app's inner workings.
+Procyon offers a wide range of options and flags to tailor the decompilation process. You can get a list of these by running the `.jar` without any arguments.
+ 
+
+
+
+
 
 # jadx
 **jadx** is a popular tool that allows you to convert Android Dex files into Java source code, making it a valuable tool for Android application penetration testing. Here's a step-by-step guide on how to install **jadx** and use it during Android penetration testing:
