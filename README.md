@@ -950,6 +950,50 @@ While ProGuard is a great start, there are commercial solutions that offer more 
 While obfuscation is a helpful tool in your app protection strategy, it's not a silver bullet. Combining it with other security best practices, like encryption, code hardening, and threat detection, provides a more comprehensive protection approach. Always ensure your primary focus is on writing secure code, and consider obfuscation as just one layer in your app's defense mechanism.
 
 
+# jadx
+**jadx** is a popular tool that allows you to convert Android Dex files into Java source code, making it a valuable tool for Android application penetration testing. Here's a step-by-step guide on how to install **jadx** and use it during Android penetration testing:
+
+## 1. Installation:
+
+### For macOS:
+
+You can easily install **jadx** using **Homebrew**:
+
+```bash
+brew install jadx
+```
+
+### For Windows:
+
+1. Download the latest release from the [jadx GitHub releases page](https://github.com/skylot/jadx/releases/).
+2. Extract the zip archive.
+3. Navigate to the bin directory and run `jadx-gui.bat` for GUI mode or `jadx.bat` for command-line mode.
+
+### For Linux:
+
+1. Download the latest release from the [jadx GitHub releases page](https://github.com/skylot/jadx/releases/).
+2. Extract the archive.
+3. Navigate to the bin directory and run `jadx-gui` for GUI mode or simply `jadx` for the command-line mode.
+
+## 2. Using jadx for Android Penetration Testing:
+
+### Using the GUI:
+
+1. **Open jadx-gui** (based on your platform, as mentioned above).
+2. **Load the APK**: Go to File > Open APK and select the APK you wish to decompile.
+3. Once loaded, you can browse through the Java source code, resources, and AndroidManifest.xml.
+
+### Using the Command Line:
+
+To decompile an APK using the command line, navigate to the directory containing the APK and run:
+
+```bash
+jadx your_target.apk
+```
+
+By default, the decompiled source code will be placed in a directory named after the APK. You can explore this directory to review the source code.
+ 
+
 # Decompiling an app
 Decompiling an app that's been obfuscated with ProGuard can be a bit challenging since obfuscation is specifically designed to hinder the reverse engineering process. However, it's not impossible. Here's a step-by-step guide:
 
@@ -1003,18 +1047,7 @@ Keep in mind that even though the code is obfuscated:
 - **Procyon**: A Java decompiler that can be handy for heavily obfuscated apps.
 - **JD-GUI**: Another popular Java decompiler.
 - **Bytecode Viewer**: A Java 8 Jar & Android APK Reverse Engineering Suite (Decompiler, Editor, Debugger & More).
-
-## Important Notes:
-
-- **Legality**: Ensure you have the appropriate permissions to reverse engineer the app. Decompiling or reverse engineering apps without consent can be illegal and unethical.
-   
-- **Complete Understanding**: Obfuscation, especially when combined with other security measures, can make it extremely hard, if not impossible, to fully understand an app's functionality just by examining its decompiled code.
-   
-- **Tools Limitation**: While tools can automate much of the reverse engineering process, a good understanding of Java and Android app development is essential for making sense of obfuscated code.
-
-In conclusion, while obfuscation complicates the reverse engineering process, with the right tools and methodologies, it's possible to gain significant insight into the app's workings.
-
-
+ 
 # Procyon
 Procyon is a suite of Java metaprogramming tools, with one of its most popular components being the Procyon Java Decompiler. Here's how you can install and use Procyon's decompiler on Linux:
 
@@ -1085,53 +1118,98 @@ Procyon offers a wide range of options and flags to tailor the decompilation pro
  
 
 
+# JD-GUI
+JD-GUI is a popular graphical utility that allows users to display Java sources from CLASS files and is very helpful for examining Java bytecode. While JD-GUI is not specifically tailored for Android APKs, you can still use it in combination with other tools to decompile APKs. Here's a step-by-step guide:
 
+### 1. Install JD-GUI:
 
+#### Linux:
+1. Download the latest JD-GUI version from the [official repository](https://github.com/java-decompiler/jd-gui/releases).
+2. Extract the `.tar.gz` file.
+   ```bash
+   tar -xvzf jd-gui-x.y.z.tar.gz
+   ```
+3. Navigate to the directory and run JD-GUI.
+   ```bash
+   ./jd-gui
+   ```
 
-# jadx
-**jadx** is a popular tool that allows you to convert Android Dex files into Java source code, making it a valuable tool for Android application penetration testing. Here's a step-by-step guide on how to install **jadx** and use it during Android penetration testing:
+#### Windows:
+1. Download the `.exe` or `.zip` version from the official repository.
+2. If downloaded as `.zip`, extract it. 
+3. Run `jd-gui.exe`.
 
-## 1. Installation:
+#### MacOS:
+1. Download the `.dmg` version from the official repository.
+2. Open the `.dmg` file and drag JD-GUI to the Applications folder.
 
-### For macOS:
+### 2. Convert APK's DEX to JAR:
 
-You can easily install **jadx** using **Homebrew**:
+Before using JD-GUI, the APK must be converted into a readable format (JAR).
 
+1. Use the `d2j-dex2jar` tool to convert APK to JAR.
+   ```bash
+   d2j-dex2jar yourApp.apk
+   ```
+2. This will produce a file named `yourApp-dex2jar.jar`.
+
+### 3. Open the JAR in JD-GUI:
+
+1. Launch JD-GUI.
+2. Go to File > Open File... or simply drag and drop the `yourApp-dex2jar.jar` onto the JD-GUI window.
+3. The classes and methods will be displayed in a navigable tree format on the left pane. Clicking on any of them will display the corresponding Java source code on the right pane.
+
+### 4. Save Decompiled Code:
+
+If you wish to save the decompiled code:
+
+1. In JD-GUI, go to File > Save All Sources.
+2. Choose a directory, and the tool will save the decompiled code as a ZIP file containing the Java sources.
+
+Overall, JD-GUI is a convenient tool to quickly view and inspect Java bytecode, making it a valuable asset in the toolkit of those wanting to analyze Android apps.
+
+# Bytecode Viewer 
+Bytecode Viewer (BCV) is a versatile Java & Android bytecode viewer and decompiler that combines the features of a few famous Java decompilers, such as JD, Procyon, CFR, and Fernflower, into one tool. Here's how you can install and use Bytecode Viewer to analyze Android APKs:
+
+### 1. Install Bytecode Viewer:
+
+#### All Platforms (Windows, Linux, MacOS):
+
+1. Visit the [official Bytecode Viewer releases page on GitHub](https://github.com/Konloch/bytecode-viewer/releases) and download the latest `.jar` release.
+2. Once downloaded, you can run Bytecode Viewer using the command:
+   ```bash
+   java -jar bytecode-viewer-x.y.z.jar
+   ```
+   Replace `x.y.z` with the appropriate version number.
+
+### 2. Convert APK's DEX to JAR (optional):
+
+Bytecode Viewer has native support for DEX files, meaning you can open APKs directly. However, if you prefer working with JAR files or have already converted your APKs, you can proceed with that.
+
+For conversion, you can use the `d2j-dex2jar` tool:
 ```bash
-brew install jadx
+d2j-dex2jar yourApp.apk
 ```
+This will produce `yourApp-dex2jar.jar`.
 
-### For Windows:
+### 3. Open the APK/JAR in Bytecode Viewer:
 
-1. Download the latest release from the [jadx GitHub releases page](https://github.com/skylot/jadx/releases/).
-2. Extract the zip archive.
-3. Navigate to the bin directory and run `jadx-gui.bat` for GUI mode or `jadx.bat` for command-line mode.
+1. Launch Bytecode Viewer.
+2. Go to File > Open or drag and drop your APK or JAR file onto the Bytecode Viewer window.
+3. Once opened, you can navigate the class files on the left pane. The right pane(s) will show the decompiled Java code. You can switch between different decompilers (JD, Procyon, CFR, Fernflower) using the tabs.
+4. You can also view the bytecode directly, or even see the hex values for each class.
 
-### For Linux:
+### 4. Additional Features:
 
-1. Download the latest release from the [jadx GitHub releases page](https://github.com/skylot/jadx/releases/).
-2. Extract the archive.
-3. Navigate to the bin directory and run `jadx-gui` for GUI mode or simply `jadx` for the command-line mode.
+- **Search**: Bytecode Viewer has powerful search functionality. You can search for method names, field names, strings, and more.
+  
+- **Plugins**: Bytecode Viewer supports plugins, enhancing its capabilities.
+  
+- **APK Decompilation**: BCV can also decompile APKs into smali, which is the intermediate representation used by Android. This can be useful for more advanced Android reverse engineering tasks.
 
-## 2. Using jadx for Android Penetration Testing:
+- **Edit and Save**: You can edit bytecode directly and save your changes, though this is a more advanced use case and requires knowledge of Java bytecode.
 
-### Using the GUI:
-
-1. **Open jadx-gui** (based on your platform, as mentioned above).
-2. **Load the APK**: Go to File > Open APK and select the APK you wish to decompile.
-3. Once loaded, you can browse through the Java source code, resources, and AndroidManifest.xml.
-
-### Using the Command Line:
-
-To decompile an APK using the command line, navigate to the directory containing the APK and run:
-
-```bash
-jadx your_target.apk
-```
-
-By default, the decompiled source code will be placed in a directory named after the APK. You can explore this directory to review the source code.
- 
-
+Bytecode Viewer is a robust tool that combines the strengths of several decompilers, making it one of the more powerful and versatile options for Java and Android analysis tasks.
 
 # APKTool Guide
 
