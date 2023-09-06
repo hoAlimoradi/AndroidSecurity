@@ -125,3 +125,34 @@ By bridging the gap between hardware and software, the Linux Kernel ensures the 
 These libraries ensure that Android applications can perform complex operations with efficiency and reliability, tapping directly into the device's hardware capabilities.
 
 
+## Android Runtime
+
+The **Android Runtime** is a pivotal component in the Android system, providing the environment in which apps run:
+
+- :books: **Core Libraries**:
+  - Essential for Android application development.
+  - They support functionalities of the Java programming language, ensuring apps can utilize the vast capabilities Java offers.
+
+- :gear: **ART (Android Runtime)**:
+  - Replaces the older Dalvik Virtual Machine.
+  - Efficiently converts bytecode (from `.dex` files) into native instructions that the device's CPU can execute.
+  - Enables faster app execution with a reduced footprint, thanks to ahead-of-time (AOT) and just-in-time (JIT) compilation.
+
+This runtime environment ensures that Android apps are performant, responsive, and can harness the full potential of the device hardware.
+
+
+## Application Framework
+
+The **Application Framework** acts as the bridge between Android OS and the applications you interact with on your device:
+
+- :building_construction: **Higher-level Services**:
+  - It offers a set of services, interfaces, and tools that developers leverage to create feature-rich and efficient applications.
+  - Ensures uniformity and consistency, so apps have a cohesive feel across the Android ecosystem.
+
+- :toolbox: **Key Components**:
+  - **WindowManager**: Oversees everything related to windows, like the stack order of windows, displaying system UI, etc.
+  - **ContentProviders**: Facilitate data sharing between applications, ensuring seamless integration and interaction among apps.
+  - **TelephonyManager**: Provides access to telephony services, managing everything from calls to cellular network attributes.
+
+By giving developers access to these essential tools and services, the Application Framework ensures that Android remains a versatile and user-friendly platform.
+
