@@ -110,3 +110,18 @@ The **Linux Kernel** is the bedrock upon which the entire Android system is buil
 By bridging the gap between hardware and software, the Linux Kernel ensures the smooth operation of the Android ecosystem, no matter the device.
 
 
+## Native Libraries
+
+**Native Libraries** in Android form a crucial set of C and C++ libraries invoked by various components of the Android system:
+
+- :pencil2: **Language Foundation**: Primarily written in C or C++, these libraries offer high-performance functionalities and are directly interfaced with the Linux kernel.
+
+- :art: **Diverse Functionalities**:
+  - **Graphics**: Libraries such as `OpenGL` and `Skia` are used for rendering graphics.
+  - **Media Codecs**: Facilitates media playback and recording with libraries like `libmedia` and `libstagefright`.
+  - **Web Browser Engine**: The `Webkit` library is at the core of Android's web browsing capabilities.
+  - **And more**: Various other functionalities, from database operations (via `SQLite`) to connectivity and more, are also managed here.
+
+These libraries ensure that Android applications can perform complex operations with efficiency and reliability, tapping directly into the device's hardware capabilities.
+
+
