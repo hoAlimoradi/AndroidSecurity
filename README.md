@@ -447,6 +447,127 @@ With a combination of timely monthly patches and the ever-watchful Google Play P
 
 > **Note**: Users are encouraged to keep their devices updated and pay heed to any security alerts for maximum protection.
 
+# Installation Guide: Java SDK, Android Studio, and Genymotion Simulator
+
+This guide will walk you through the installation process for the Java SDK, Android Studio, and the Genymotion simulator across macOS, Windows, and Linux platforms.
+
+## Table of Contents
+
+- [Java SDK](#java-sdk)
+  - [macOS](#macos-java)
+  - [Windows](#windows-java)
+  - [Linux](#linux-java)
+- [Android Studio](#android-studio)
+  - [macOS](#macos-android-studio)
+  - [Windows](#windows-android-studio)
+  - [Linux](#linux-android-studio)
+- [Genymotion Simulator](#genymotion-simulator)
+  - [macOS](#macos-genymotion)
+  - [Windows](#windows-genymotion)
+  - [Linux](#linux-genymotion)
+
+## Java SDK
+
+### macOS <a name="macos-java"></a>
+
+1. **Download the JDK installer:**  
+   Navigate to the [official Oracle website](https://www.oracle.com/java/technologies/javase-jdk14-downloads.html) and download the macOS version.
+
+2. **Install:**  
+   Open the downloaded file and follow the on-screen instructions to install the JDK.
+
+### Windows <a name="windows-java"></a>
+
+1. **Download the JDK installer:**  
+   Visit the [official Oracle website](https://www.oracle.com/java/technologies/javase-jdk14-downloads.html) and download the Windows version.
+
+2. **Install:**  
+   Execute the downloaded file and follow the prompts to complete the installation.
+
+### Linux <a name="linux-java"></a>
+
+1. **Download the JDK installer:**  
+   Navigate to the [official Oracle website](https://www.oracle.com/java/technologies/javase-jdk14-downloads.html) and download the Linux version (.tar.gz archive).
+
+2. **Extract and Install:**  
+   ```bash
+   tar -xvf downloaded-jdk-file.tar.gz
+   sudo mv jdk-version/ /usr/lib/jvm/
+   ```
+
+## Android Studio <a name="android-studio"></a>
+
+### macOS <a name="macos-android-studio"></a>
+
+1. **Download:**  
+   Go to the [official Android Studio website](https://developer.android.com/studio) and download the macOS version.
+
+2. **Install:**  
+   Drag and drop the downloaded application to the Applications folder.
+
+### Windows <a name="windows-android-studio"></a>
+
+1. **Download:**  
+   Navigate to the [official Android Studio website](https://developer.android.com/studio) and get the Windows version.
+
+2. **Install:**  
+   Run the downloaded `.exe` file and follow the installation wizard.
+
+### Linux <a name="linux-android-studio"></a>
+
+1. **Download:**  
+   Visit the [official Android Studio website](https://developer.android.com/studio) and download the Linux version.
+
+2. **Extract and Install:**  
+   ```bash
+   tar -xvf downloaded-android-studio-file.tar.gz
+   cd android-studio/bin/
+   ./studio.sh
+   ```
+
+## Genymotion Simulator <a name="genymotion-simulator"></a>
+
+### macOS <a name="macos-genymotion"></a>
+
+1. **Sign Up:**  
+   Register for a Genymotion account [here](https://www.genymotion.com/account/create/).
+
+2. **Download:**  
+   After logging in, download Genymotion for macOS from [this page](https://www.genymotion.com/fun-zone/).
+
+3. **Install:**  
+   Drag and drop the downloaded application to the Applications folder. Remember to have VirtualBox installed as Genymotion relies on it.
+
+### Windows <a name="windows-genymotion"></a>
+
+1. **Sign Up:**  
+   Register for a Genymotion account [here](https://www.genymotion.com/account/create/).
+
+2. **Download:**  
+   After logging in, get Genymotion for Windows from [this page](https://www.genymotion.com/fun-zone/).
+
+3. **Install:**  
+   Run the downloaded file and follow the prompts. Ensure you have VirtualBox installed since Genymotion is dependent on it.
+
+### Linux <a name="linux-genymotion"></a>
+
+1. **Sign Up:**  
+   Create a Genymotion account [here](https://www.genymotion.com/account/create/).
+
+2. **Download:**  
+   After signing in, download Genymotion for Linux from [this page](https://www.genymotion.com/fun-zone/).
+
+3. **Install:**  
+   ```bash
+   chmod +x downloaded-genymotion-file.bin
+   ./downloaded-genymotion-file.bin
+   ```
+
+Remember to have VirtualBox installed as Genymotion relies on it.
+
+---
+
+Ensure you always download software from official sources to avoid security risks.
 ## Common Tools for Android Pen-testing
 
 Android penetration testing is a vital process to uncover vulnerabilities in applications and the Android OS itself. There are numerous tools available to assist in this endeavor, each with its own specific capabilities and focus areas. Here's a list of common tools employed in Android pen-testing:
